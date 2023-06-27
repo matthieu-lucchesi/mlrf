@@ -63,15 +63,15 @@ def save_images(images, folder):
         plt.imsave(fname=folder / f"{i}.png", arr=image)
 
 def load_labels(folder, file_name):
-    with open(folder / "labels.txt", "wb") as file:
+    with open(folder / file_name /"labels.txt", "wb") as file:
         pickle.dump(extract_files(folder)[file_name][b"labels"], file=file)
 
 
 def load_batch(file_name="data_batch_1"):
     folder_data_extracted = extract_data()
-    save_images(data2img(extract_files(folder_data_extracted)[file_name][b"data"]), folder_data_extracted / "batch1")
+    save_images(data2img(extract_files(folder_data_extracted)[file_name][b"data"]), folder_data_extracted / file_name)
     load_labels(folder_data_extracted, file_name)
-    print("Etraction of" + file_name + " done !")
+    print("Etraction of " + file_name + " done !")
 
 if __name__ == "__main__":
     load_batch()

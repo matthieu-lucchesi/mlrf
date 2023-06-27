@@ -2,17 +2,15 @@ from src import get_project_root
 import os
 import cv2
 import matplotlib.pyplot as plt
-import numpy as np
-import pickle
 from sklearn.linear_model import SGDClassifier
 
 
-IMG_FOLDER = get_project_root() / "data/batch1"
+IMG_FOLDER = get_project_root() / "data/"
 
 
-def extract(folder):
+def extract(folder=IMG_FOLDER / "data_batch_1"):
     for file in os.scandir(folder):
-        if "_" not in file.name:
+        if "_" not in file.name and ".png" in file.name:
             image = cv2.imread(file.path)
             #TRY cv2.COLOR_RGB2HLS
             image_reduced = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
@@ -20,7 +18,7 @@ def extract(folder):
 
 
 
-def get_X_train(folder):
+def get_X(folder):
     res= []
     for file in os.scandir(folder):
         if "_" in file.name:
@@ -33,7 +31,12 @@ def get_X_train(folder):
             res.append(sample)
     return res
 
+def get_y(folder):
+    for file in os.scandir(folder):
+        if ".txt" in file.name:
+            return file.path
 
 if __name__ == "__main__":
-    extract(IMG_FOLDER)
+    extract(IMG_FOLDER / "data_batch_1")
+    extract(IMG_FOLDER / "data_batch_2")
     print("Features DONE")
