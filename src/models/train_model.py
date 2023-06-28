@@ -28,8 +28,8 @@ def train_model(file_name="data_batch_1", model_choice=SGDClassifier(random_stat
 
 
 if __name__ == "__main__":
-    # train_model()
-    # train_model("data_batch_2")
+    train_model()
+    train_model("data_batch_2")
     train_model(model_choice=RandomForestClassifier())
     train_model("data_batch_2", model_choice=RandomForestClassifier())
     

@@ -10,7 +10,6 @@ from src import get_project_root
 from pathlib import Path
 import os
 import matplotlib.pyplot as plt
-import numpy as np
 
 IMG_FOLDER = get_project_root() / "data"
 
@@ -29,7 +28,7 @@ def evaluation(model_file, X_test_folder, y_test_folder):
 
         report = classification_report(y_test, y_pred)
 
-        folder = Path(__file__).parent / (model_name + "_" + eval_name)
+        folder = get_project_root() / "reports" / (model_name + "_" + eval_name)
         if not os.path.exists(folder):
             os.makedirs(folder)
 
