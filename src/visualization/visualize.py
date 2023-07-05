@@ -1,17 +1,20 @@
-from sklearn.preprocessing import LabelBinarizer
+import os
+import pickle
+from pathlib import Path
+
+import matplotlib.pyplot as plt
 from sklearn.metrics import (
-    classification_report,
     ConfusionMatrixDisplay,
     RocCurveDisplay,
+    classification_report,
 )
-import pickle
-from src.models.train_model import get_X, get_y
+from sklearn.preprocessing import LabelBinarizer
+
 from src import get_project_root
-from pathlib import Path
-import os
-import matplotlib.pyplot as plt
+from src.models.train_model import get_X, get_y
 
 IMG_FOLDER = get_project_root() / "data"
+
 
 def evaluation(model_file, test_folder, extract_method) -> None:
     """Evaluates a model saved in ../models with a test batch and an extract method"""
@@ -78,11 +81,16 @@ def evaluation(model_file, test_folder, extract_method) -> None:
         except:
             print("No ROC curve for this model")
 
+
 def visu() -> None:
     """evaluate all models form folder ../models"""
     for model in os.scandir(Path(__file__).parent.parent / "models"):
         if ".txt" in model.name:
-            evaluation(model, IMG_FOLDER / "data_batch_2", model.name.split('_')[-1].split('.')[0])
+            evaluation(
+                model,
+                IMG_FOLDER / "data_batch_2",
+                model.name.split("_")[-1].split(".")[0],
+            )
 
 
 if __name__ == "__main__":

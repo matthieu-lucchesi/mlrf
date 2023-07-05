@@ -1,5 +1,3 @@
 scikit-learn
-opencv-python
-numpy
-matplotlib
-altair
+opencv-python-headless
+matplotlib.pyplot

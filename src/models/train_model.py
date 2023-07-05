@@ -1,25 +1,48 @@
-from typing import List
-from src import get_project_root
-
 import os
-import matplotlib.pyplot as plt
 import pickle
-from sklearn.model_selection import GridSearchCV
-from sklearn.svm import LinearSVC
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.neighbors import NearestCentroid
 from pathlib import Path
+from typing import List
+
+import matplotlib.pyplot as plt
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import GridSearchCV
+from sklearn.neighbors import NearestCentroid
+from sklearn.svm import LinearSVC
+
+from src import get_project_root
 
 IMG_FOLDER = get_project_root() / "data"
 METHODS = ["flatten", "HSV", "HOG"]
-MODELS = [
-    GridSearchCV(RandomForestClassifier(random_state=42), param_grid= {"max_depth":[10,20, 30],"bootstrap":[True, False]}),
-    # NearestCentroid(),
-    # LinearSVC(random_state=42),
-]
+MODELS = {
+    # "RandomForestClassifier": RandomForestClassifier(random_state=42),
+    # "NearestCentroid": NearestCentroid(),
+    # "LinearSVC": LinearSVC(random_state=42, dual="auto"),
+    "RandomForestClassifierGrid": GridSearchCV(
+        RandomForestClassifier(random_state=42),
+        param_grid={"max_depth": [10, 20, 30], "bootstrap": [True, False]},
+        verbose=3,
+        cv=3,
+    ),
+    "NearestCentroidGrid": GridSearchCV(
+        NearestCentroid(),
+        param_grid={
+            "metric": ["euclidean", "manhattan"],
+            "shrink_threshold": [None, 0.1, 0.5, 1],
+        },
+        verbose=3,
+        cv=3,
+    ),
+    "LinearSVCGrid": GridSearchCV(
+        LinearSVC(random_state=42, dual="auto"),
+        param_grid={
+            "C": [1, 10, 100],
+            "kernel": ["linear", "rbf"],
+        },
+        verbose=3,
+        cv=3,
+    ),
+}
 
-
-            #    for ker in ["rbf", "poly", "sigmoid"] for c in [0.1,1,10],
 
 def get_X(folder, extract_method="flatten") -> List[List[float]]:
     """Get the data from a batch of images with the features asked"""
@@ -60,7 +83,8 @@ def get_y(folder) -> Path:
 
 def train_model(
     batches=["data_batch_1"],
-    model_choice=MODELS[0],
+    key_choice="RandomForestClassifier",
+    model_choice=MODELS["RandomForestClassifierGrid"],
     extract_method="HSV",
 ):
     """Loops over batches to retrieve data asked and train a model with the data"""
@@ -73,28 +97,30 @@ def train_model(
         with open(folder / "labels.txt", "rb") as file:
             y_train = pickle.load(file)
 
-    print(
-        f"Trainning... {type(model_choice).__name__} with features from {extract_method}"
-    )
+    print(f"Trainning... {key_choice} with features from {extract_method}")
 
-    model_tuned = model_choice.fit(X_train, y_train).best_estimator_
-    print("Trainning DONE")
+    if "Grid" in key_choice:
+        model_tuned = model_choice.fit(X_train, y_train).best_estimator_
+        print(model_choice.best_params_)
+    else:
+        model_tuned = model_choice.fit(X_train, y_train)
+
+    print("DONE")
 
     with open(
-        Path(__file__).parent
-        / f"{len(batches)}_{type(model_choice).__name__}_{extract_method}.txt",
+        Path(__file__).parent / f"{key_choice}_{extract_method}.txt",
         "wb",
     ) as file:
-        pickle.dump(model_choice, file)
-        print("Model saved in " + file.name+"\n")
+        pickle.dump(model_tuned, file)
+        print("Model saved in " + file.name + "\n")
     return file.name
 
 
 def train_all(batches, models=MODELS, extraction_methods=METHODS) -> None:
     """Loops over models and extract methods to train data"""
-    for model in models:
+    for key, model in models.items():
         for method in extraction_methods:
-            train_model(batches, model, method)
+            train_model(batches, key, model, method)
 
 
 if __name__ == "__main__":
