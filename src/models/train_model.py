@@ -4,6 +4,7 @@ from src import get_project_root
 import os
 import matplotlib.pyplot as plt
 import pickle
+from sklearn.model_selection import GridSearchCV
 from sklearn.svm import LinearSVC
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import NearestCentroid
@@ -12,12 +13,13 @@ from pathlib import Path
 IMG_FOLDER = get_project_root() / "data"
 METHODS = ["flatten", "HSV", "HOG"]
 MODELS = [
-    RandomForestClassifier(random_state=42),
-    NearestCentroid(),
-    LinearSVC(random_state=42),
+    GridSearchCV(RandomForestClassifier(random_state=42), param_grid= {"max_depth":[10,20, 30],"bootstrap":[True, False]}),
+    # NearestCentroid(),
+    # LinearSVC(random_state=42),
 ]
-MODELS = [LinearSVC(random_state=42)]
 
+
+            #    for ker in ["rbf", "poly", "sigmoid"] for c in [0.1,1,10],
 
 def get_X(folder, extract_method="flatten") -> List[List[float]]:
     """Get the data from a batch of images with the features asked"""
@@ -75,7 +77,7 @@ def train_model(
         f"Trainning... {type(model_choice).__name__} with features from {extract_method}"
     )
 
-    model_choice.fit(X_train, y_train)
+    model_tuned = model_choice.fit(X_train, y_train).best_estimator_
     print("Trainning DONE")
 
     with open(

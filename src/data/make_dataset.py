@@ -27,7 +27,7 @@ def extract_data(folder=FOLDER_DATA, dest=FOLDER_DATA) -> Path:
 
 def get_batches(folder=FOLDER_DATA) -> List[Path]:
     """Return the list of the batches"""
-    for dir in os.scandir(folder):
+    for dir in os.scandir(extract_data()):
         if dir.is_dir() and dir.name == "cifar-10-batches-py":
             return [file.path for file in os.scandir(dir.path) if "_batch" in file.name]
 
@@ -76,7 +76,7 @@ def load_labels(folder, file_name) -> None:
 
 def load_batch(file_name="data_batch_1") -> None:
     """Save images and labels from a batch"""
-    folder_data_extracted = extract_data()
+    folder_data_extracted = FOLDER_DATA
     save_images(
         data2img(extract_files(folder_data_extracted)[file_name][b"data"]),
         folder_data_extracted / file_name,
