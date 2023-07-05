@@ -21,7 +21,7 @@ def extract(folder=IMG_FOLDER / "data_batch_1") -> None:
                 [image_reduced],
                 channels=[0, 1, 2],
                 mask=None,
-                histSize=[4, 4, 4],
+                histSize=[3, 4, 4],
                 ranges=[0, 180, 0, 256, 0, 256],
             )
             with open(
