@@ -20,8 +20,22 @@ def extract(folder=IMG_FOLDER / "data_batch_1"):
             with open(folder /(file.name.split('.')[0] + "_reduced.list"),"wb") as file:
                 pickle.dump(hist.flatten(), file)
 
+def extract_hog(folder=IMG_FOLDER / "data_batch_1"):
+    for file in os.scandir(folder):
+        if "_" not in file.name and ".png" in file.name:
+            image = cv2.imread(file.path)
 
+            winSize = (32,32) 
+            blockSize = (16,16) # Defaults values from here
+            blockStride = (8,8)
+            cellSize = (8,8)
+            nbins = 9
+            hog = cv2.HOGDescriptor(winSize, blockSize, blockStride, cellSize, nbins)
+            
+            hist = hog.compute(image)
 
+            with open(folder /(file.name.split('.')[0] + "_reduced.list"),"wb") as file:
+                pickle.dump(hist.flatten(), file)
 
 
 def get_X(folder):
