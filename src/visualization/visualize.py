@@ -50,12 +50,15 @@ def evaluation(model_file, X_test_folder, y_test_folder):
                 color="darkorange",
             )
         except:
-            RocCurveDisplay.from_predictions(
-                y_onehot_test.ravel(),
-                model.decision_function(X_test).ravel(),
-                name="micro-average OvR",
-                color="darkorange",
-            )
+            try:
+                RocCurveDisplay.from_predictions(
+                    y_onehot_test.ravel(),
+                    model.decision_function(X_test).ravel(),
+                    name="micro-average OvR",
+                    color="darkorange",
+                )
+            except:
+                print("No ROC curve for this model")
         plt.plot([0, 1], [0, 1], "k--", label="chance level (AUC = 0.5)")
         plt.axis("square")
         plt.xlabel("False Positive Rate")

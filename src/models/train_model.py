@@ -3,6 +3,7 @@ from src.features.build_features import get_X
 import pickle
 from sklearn.linear_model import SGDClassifier
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import NearestCentroid
 from pathlib import Path
 
 IMG_FOLDER = get_project_root() / "data"
@@ -32,5 +33,6 @@ if __name__ == "__main__":
     train_model("data_batch_2")
     train_model(model_choice=RandomForestClassifier())
     train_model("data_batch_2", model_choice=RandomForestClassifier())
+    train_model(model_choice=NearestCentroid())
     
     print("DONE")
