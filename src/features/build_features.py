@@ -3,7 +3,6 @@ import pickle
 from pathlib import Path
 
 import cv2
-import matplotlib.pyplot as plt
 
 from src import get_project_root
 
@@ -27,8 +26,8 @@ def extract(folder=IMG_FOLDER / "data_batch_1") -> None:
             )
             with open(
                 Path(folder) / (file.name.split(".")[0] + "_hsv.list"), "wb"
-            ) as file:
-                pickle.dump(hist.flatten(), file)
+            ) as file_:
+                pickle.dump(hist.flatten(), file_)
 
             # HOG extraction
             winSize = (32, 32)
@@ -40,8 +39,8 @@ def extract(folder=IMG_FOLDER / "data_batch_1") -> None:
             hist = hog.compute(image)
             with open(
                 Path(folder) / (file.name.split(".")[0] + "_hog.list"), "wb"
-            ) as file:
-                pickle.dump(hist.flatten(), file)
+            ) as file_:
+                pickle.dump(hist.flatten(), file_)
 
 
 def extract_all(folder=IMG_FOLDER) -> None:
