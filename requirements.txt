@@ -1,3 +1,3 @@
-scikit-learn
-opencv-python-headless
-matplotlib.pyplot
+scikit-learn==1.3.0
+opencv-python-headless==4.8.0.74
+matplotlib==3.7.1

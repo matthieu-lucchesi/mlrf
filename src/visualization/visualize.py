@@ -88,7 +88,7 @@ def visu() -> None:
         if ".txt" in model.name:
             evaluation(
                 model,
-                IMG_FOLDER / "data_batch_2",
+                IMG_FOLDER / "test_batch",
                 model.name.split("_")[-1].split(".")[0],
             )
 
