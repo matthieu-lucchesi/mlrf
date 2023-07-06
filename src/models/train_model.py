@@ -16,7 +16,7 @@ METHODS = ["flatten", "HSV", "HOG"]
 MODELS = {
     "RandomForestClassifier": RandomForestClassifier(random_state=42),
     "NearestCentroid": NearestCentroid(),
-    "LinearSVC": LinearSVC(random_state=42),
+    "LinearSVC": LinearSVC(random_state=42, dual="auto"),
     # "RandomForestClassifierGrid": GridSearchCV(
     #     RandomForestClassifier(random_state=42),
     #     param_grid={"max_depth": [10, 20, 30], "bootstrap": [True, False]},

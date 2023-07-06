@@ -8,7 +8,7 @@ from src.features.build_features import extract_all
 from src.models.train_model import train_all
 from src.visualization.visualize import visu
 
-if __name__ == "__main__.py":
+if __name__ == "__main__":
     ### 1.Installs the dependencies
 
     os.system("pip install -r requirements.txt")
@@ -27,7 +27,7 @@ if __name__ == "__main__.py":
 
     ### 4.Trains the models and store them in ./src/models/
     ### models are yet given but you can delete all .txt files in src/models/ and uncomment :
-
+    ### If you don't want to train you need to extract all .txt files in the folder ./src/models/
     # train_all(["data_batch_1"])      # For fastest results
     # train_all(["data_batch_1", "data_batch_2", "data_batch_3", "data_batch_4", "data_batch_5"])   #If you want to train on all the data
 
