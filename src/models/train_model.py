@@ -14,33 +14,37 @@ from src import get_project_root
 IMG_FOLDER = get_project_root() / "data"
 METHODS = ["flatten", "HSV", "HOG"]
 MODELS = {
-    # "RandomForestClassifier": RandomForestClassifier(random_state=42),
-    # "NearestCentroid": NearestCentroid(),
-    # "LinearSVC": LinearSVC(random_state=42, dual="auto"),
-    "RandomForestClassifierGrid": GridSearchCV(
-        RandomForestClassifier(random_state=42),
-        param_grid={"max_depth": [10, 20, 30], "bootstrap": [True, False]},
-        verbose=3,
-        cv=3,
+    "RandomForestClassifier": RandomForestClassifier(random_state=42),
+    "NearestCentroid": NearestCentroid(),
+    "LinearSVC": LinearSVC(random_state=42),
+    # "RandomForestClassifierGrid": GridSearchCV(
+    #     RandomForestClassifier(random_state=42),
+    #     param_grid={"max_depth": [10, 20, 30], "bootstrap": [True, False]},
+    #     verbose=3,
+    #     cv=3,
+    # ),
+    # "NearestCentroidGrid": GridSearchCV(
+    #     NearestCentroid(),
+    #     param_grid={
+    #         "metric": ["euclidean", "manhattan"],
+    #         "shrink_threshold": [None, 0.1, 0.5, 1],
+    #     },
+    #     verbose=3,
+    #     cv=3,
+    # ),
+    # "LinearSVCGrid": GridSearchCV(
+    #     LinearSVC(random_state=42, dual="auto"),
+    #     param_grid={
+    #         "C": [1, 10, 100, 1000],
+    #     },
+    #     verbose=3,
+    #     cv=3,
+    # ),
+    # Models obtained after doing the grid search
+    "RandomForestClassifierBest": RandomForestClassifier(
+        random_state=42, max_depth=30, bootstrap=False
     ),
-    "NearestCentroidGrid": GridSearchCV(
-        NearestCentroid(),
-        param_grid={
-            "metric": ["euclidean", "manhattan"],
-            "shrink_threshold": [None, 0.1, 0.5, 1],
-        },
-        verbose=3,
-        cv=3,
-    ),
-    "LinearSVCGrid": GridSearchCV(
-        LinearSVC(random_state=42, dual="auto"),
-        param_grid={
-            "C": [1, 10, 100],
-            "kernel": ["linear", "rbf"],
-        },
-        verbose=3,
-        cv=3,
-    ),
+    "NearestCentroidBest": NearestCentroid(metric="manhattan", shrink_threshold=None),
 }
 
 
@@ -84,7 +88,7 @@ def get_y(folder) -> Path:
 def train_model(
     batches=["data_batch_1"],
     key_choice="RandomForestClassifier",
-    model_choice=MODELS["RandomForestClassifierGrid"],
+    model_choice=MODELS["RandomForestClassifier"],
     extract_method="HSV",
 ):
     """Loops over batches to retrieve data asked and train a model with the data"""
@@ -95,7 +99,7 @@ def train_model(
 
         X_train += get_X(folder, extract_method)
         with open(folder / "labels.txt", "rb") as file:
-            y_train = pickle.load(file)
+            y_train += pickle.load(file)
 
     print(f"Trainning... {key_choice} with features from {extract_method}")
 
@@ -124,7 +128,9 @@ def train_all(batches, models=MODELS, extraction_methods=METHODS) -> None:
 
 
 if __name__ == "__main__":
-    train_all(["data_batch_1"])
+    train_all(
+        ["data_batch_1", "data_batch_2", "data_batch_3", "data_batch_4", "data_batch_5"]
+    )
     # train_model(["data_batch_2"], model_choice=MODEL[1], extract_method="HOG")
     # train_model(["data_batch_3"], model_choice=MODEL[2], extract_method="HOG")
 
